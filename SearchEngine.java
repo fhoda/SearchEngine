@@ -43,16 +43,17 @@ public class SearchEngine{
 					docLength = 0;
 				} else if(invertedIndex.containsKey(term)){
 					termfrequencies = invertedIndex.get(term);
-					if(!termfrequencies.contains(docID)){
+					TermFrequency id = new TermFrequency(docID, 0);
+					if(termfrequencies.contains(id)==false){
 						TermFrequency tf = new TermFrequency(docID, 1);
 						termfrequencies.add(tf);
 					} else{
-						int index = termfrequencies.indexOf(docID);
-						TermFrequency tf = (TermFrequency)termfrequencies.get(index);
-						tf.inrFreq();
-						termfrequencies.add(index, tf);
+						// System.out.println("in the else");
+						int index = termfrequencies.indexOf(id);	
+						// System.out.println(index);
+						termfrequencies.get(index).inrFreq();
 					}
-					invertedIndex.put(term, termfrequencies);
+					// invertedIndex.put(term, termfrequencies);
 					docLength = docLength+1;
 				} else{
 					termfrequencies = new ArrayList<TermFrequency>();
@@ -64,7 +65,7 @@ public class SearchEngine{
 			}
 		}
 
-		System.out.println("index has been built");
+		// System.out.println("index has been built");
 
 		Set<String> keys = invertedIndex.keySet();
 		for(String key : keys){

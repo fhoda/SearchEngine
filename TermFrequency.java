@@ -46,18 +46,4 @@ public class TermFrequency{
 	public String toString(){
 		return docID+":"+frequency;
 	}
-
-	// public int compareTo(TermFrequency tf){
-	// 	int comparison;
-	// 	if(docID==tf.getFrequency()){
-	// 		comparison = 0;
-	// 	}
-	// 	else if(docID<tf.getDocID()){
-	// 		comparison = -1;
-	// 	}
-	// 	else{
-	// 		comparison = 1;
-	// 	}
-	// 	return comparison;
-	// }
 }
