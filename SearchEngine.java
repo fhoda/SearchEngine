@@ -10,23 +10,45 @@ import java.io.*;
 public class SearchEngine{
 
 	public static void main(String[] args)throws FileNotFoundException, IOException{
-		buildIndex(args[0]);
+
+		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
+		ArrayList<Integer> docLengths = new ArrayList<Integer>();
+		buildIndex(args[0], invertedIndex, docLengths);
+
+
+
+
+
+
+
+		// Set<String> keys = invertedIndex.keySet();
+		// for(String key : keys){
+		// 	ArrayList pairs = invertedIndex.get(key);
+		// 	System.out.println(key + " - " + pairs.toString()+ " ");
+		// }
+
+		// System.out.println("\n");
+		// System.out.println("Document Lengths:");
+		// 	for(int i=1; i<docLengths.size(); i++){
+		// 		System.out.println(i+":"+docLengths.get(i));
+		// 	}
 	}
 
 	/**
 	*	Method to read file and create an inverted index of terms
 	*	@param fileName String name of file to index
 	*/
-	public static void buildIndex(String fileName)throws FileNotFoundException, IOException{
+	public static void buildIndex(String fileName, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths)throws FileNotFoundException, IOException{
 		FileReader file = new FileReader(fileName);
 		BufferedReader reader = new BufferedReader(file);
-		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
+		// HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
 
 		// String line;
 		Scanner scan;	
 		int docID = 0;
 		int docLength = 0;
 		ArrayList<TermFrequency> termfrequencies;
+		// ArrayList<Integer> docLengths = new ArrayList<Integer>();
 		// System.out.println("Initialized variables and in buildIndex");
 		
 		while(reader.ready()){
@@ -37,6 +59,7 @@ public class SearchEngine{
 				String term = scan.next();
 				// System.out.println(term);
 				if(term.equals("#")){
+					docLengths.add(docID, docLength);
 					term = scan.next();
 					docID = Integer.parseInt(term);
 					// System.out.println(docID);
@@ -53,7 +76,6 @@ public class SearchEngine{
 						// System.out.println(index);
 						termfrequencies.get(index).inrFreq();
 					}
-					// invertedIndex.put(term, termfrequencies);
 					docLength = docLength+1;
 				} else{
 					termfrequencies = new ArrayList<TermFrequency>();
@@ -67,10 +89,18 @@ public class SearchEngine{
 
 		// System.out.println("index has been built");
 
-		Set<String> keys = invertedIndex.keySet();
-		for(String key : keys){
-			ArrayList pairs = invertedIndex.get(key);
-			System.out.println(key + " - " + pairs.toString()+ " ");
-		}
+		// Set<String> keys = invertedIndex.keySet();
+		// for(String key : keys){
+		// 	ArrayList pairs = invertedIndex.get(key);
+		// 	System.out.println(key + " - " + pairs.toString()+ " ");
+		// }
+
+		// System.out.println("\n");
+		// System.out.println("Document Lengths:");
+		// 	for(int i=1; i<docLengths.size(); i++){
+		// 		System.out.println(i+":"+docLengths.get(i));
+		// 	}
 	}
+
+	
 }
