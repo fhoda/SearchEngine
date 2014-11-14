@@ -20,37 +20,56 @@ public class SearchEngine{
 	public static void buildIndex(String fileName)throws FileNotFoundException, IOException{
 		FileReader file = new FileReader(fileName);
 		BufferedReader reader = new BufferedReader(file);
-		HashMap<String, ArrayList<Integer>> invertedIndex = new HashMap<String, ArrayList<Integer>>();
+		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
 
-		String line = "";
-		Scanner scan = new Scanner(line);
+		// String line;
+		Scanner scan;	
 		int docID = 0;
+		int docLength = 0;
+		ArrayList<TermFrequency> termfrequencies;
+		// System.out.println("Initialized variables and in buildIndex");
+		
 		while(reader.ready()){
-			line = reader.readLine();
+			String line = reader.readLine();
+			scan = new Scanner(line);
+			// System.out.println(line);
 			while(scan.hasNext()){
 				String term = scan.next();
+				// System.out.println(term);
 				if(term.equals("#")){
 					term = scan.next();
 					docID = Integer.parseInt(term);
+					// System.out.println(docID);
+					docLength = 0;
 				} else if(invertedIndex.containsKey(term)){
-					ArrayList termfrequencies = invertedIndex.get(term);
-					int frequency;
-					if(termfrequencies.get(docID)==null){
-						frequency = 0;
+					termfrequencies = invertedIndex.get(term);
+					if(!termfrequencies.contains(docID)){
+						TermFrequency tf = new TermFrequency(docID, 1);
+						termfrequencies.add(tf);
 					} else{
-						frequency = (Integer) termfrequencies.get(docID);
+						int index = termfrequencies.indexOf(docID);
+						TermFrequency tf = (TermFrequency)termfrequencies.get(index);
+						tf.inrFreq();
+						termfrequencies.add(index, tf);
 					}
-					frequency += 1;
-					termfrequencies.add(docID, frequency);
 					invertedIndex.put(term, termfrequencies);
+					docLength = docLength+1;
 				} else{
-					ArrayList<Integer> tf = new ArrayList<Integer>();
-					tf.add(docID, 1);
-					invertedIndex.put(term, tf);
-				}
-
+					termfrequencies = new ArrayList<TermFrequency>();
+					TermFrequency tf = new TermFrequency(docID, 1);
+					termfrequencies.add(tf);
+					invertedIndex.put(term, termfrequencies);
+					docLength = docLength+1;
 				}
 			}
-	}
+		}
 
+		System.out.println("index has been built");
+
+		Set<String> keys = invertedIndex.keySet();
+		for(String key : keys){
+			ArrayList pairs = invertedIndex.get(key);
+			System.out.println(key + " - " + pairs.toString()+ " ");
+		}
+	}
 }
