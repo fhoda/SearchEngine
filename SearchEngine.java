@@ -13,6 +13,7 @@ public class SearchEngine{
 
 		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
 		ArrayList<Integer> docLengths = new ArrayList<Integer>();
+		
 		buildIndex(args[0], invertedIndex, docLengths);
 
 
@@ -35,22 +36,37 @@ public class SearchEngine{
 	}
 
 	/**
-	*	Method to read file and create an inverted index of terms
+	*	Method to read file and create an inverted index of terms and document length table
 	*	@param fileName String name of file to index
+	*	@param invertedIndex Hashtable for storing inverted index
+	*	@param docLengths ArrayList for storing document lenghts
 	*/
 	public static void buildIndex(String fileName, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths)throws FileNotFoundException, IOException{
 		FileReader file = new FileReader(fileName);
 		BufferedReader reader = new BufferedReader(file);
 		// HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
 
-		// String line;
 		Scanner scan;	
-		int docID = 0;
-		int docLength = 0;
-		ArrayList<TermFrequency> termfrequencies;
+		int docID = 0; 		// For storing document ID throughout the loop.
+		int docLength = 0; 	//	For tallying document length throughout the loop.
+		ArrayList<TermFrequency> termfrequencies; // Store docID-tf pairs for each term in the hashtable invertedIndex	
 		// ArrayList<Integer> docLengths = new ArrayList<Integer>();
-		// System.out.println("Initialized variables and in buildIndex");
+
+
+		// System.out.println("Initialized variables and now building Index...");
 		
+		
+
+		/* 	
+		*	Loop to create invertedIndex.
+		*	Read each line of the file. If it has a '#' in it then the next token is the docID
+		*	Else, see if the term is in the index already
+		*		If it is then see if the docID is in the corresponding list (array).
+		*			If it is not in the list then add it as an object containing docID-tf pair
+		*			Else, increment the frequency of that document at that term
+		*			Finally inrement the docLength to tally the processed term
+		*		Else, add the term and docID-tf(1) pair object to the inverted index and incement docLength
+		*/
 		while(reader.ready()){
 			String line = reader.readLine();
 			scan = new Scanner(line);
@@ -102,5 +118,5 @@ public class SearchEngine{
 		// 	}
 	}
 
-	
+
 }
