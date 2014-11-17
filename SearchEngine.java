@@ -12,7 +12,7 @@ public class SearchEngine{
 	public static void main(String[] args)throws FileNotFoundException, IOException{
 
 		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
-		ArrayList<Integer> docLengths = new ArrayList<Integer>();
+		ArrayList<Integer> docLengths = new ArrayList<Integer>(); // index number the docID and value is the document length
 		
 		buildIndex(args[0], invertedIndex, docLengths);
 
