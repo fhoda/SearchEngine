@@ -3,7 +3,7 @@ SearchEngine
 
 Information Retrieval Homework 5
 
-Creates an inverted index given corpus.
+Creates an inverted index given a corpus.
 
 Ranks the documents using BM25 Ranking.
 
