@@ -6,7 +6,6 @@
 
 import java.util.*;
 import java.io.*;
-import java.lang.*;
 
 
 /** 
@@ -57,11 +56,15 @@ public class SearchEngine{
 			}
 		}
 
+		file.close();
+		reader.close();
+
 		// now we have all of the queries. Let's run it through the bm25 index.
 
 		for(int x = 0; x < 7; x++)
 		{ // going to have to change the bm25 functino in order to print out to a sepratef ile so the screen isn't flooded with results.
-			bm25(query, invertedIndex, docLengths);
+			String docName = Integer.toString(x) + " query.txt";
+			bm25(query_array[x], invertedIndex, docLengths, docName);
 		}
 
 		// Set<String> keys = invertedIndex.keySet();
@@ -167,7 +170,7 @@ public class SearchEngine{
 	*	@param invertedIndex HashMap of inverted index precomputed to use for calculating scores
 	*	@param docLenghts ArrayList of document lenghts - index number corresponds to doc ID.
 	*/
-	public static void bm25(String query, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths){
+	public static void bm25(String query, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths, String outputFile){
 		
 		/* Variables for computing BM25 score*/
 		double k1 = 1.2;
@@ -221,6 +224,27 @@ public class SearchEngine{
 
 		Collections.sort(rankings);
 
+		try
+		{
+			PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
+
+			//instantiating rankings.size() outside of the scope of the forloop so it's not calling that function 100 times within the loop. boom. knowledge.
+			int rank_size = rankings.size();
+			int limit = rank_size-101;
+			int top_100_count = 1;
+			for(int j = rank_size-1; j>=limit; j--)
+			{
+				writer.print(top_100_count + "\t");
+				writer.println(rankings.get(j).toString());
+				top_100_count++;
+			}
+
+			writer.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		// Don't want to print out all the results. Print it to teh specified
 		//for(int j = rankings.size()-1; j>=0; j--){
 		//	System.out.println(rankings.get(j).toString());
