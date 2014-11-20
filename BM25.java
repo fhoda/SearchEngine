@@ -82,6 +82,6 @@ public class BM25 implements Comparable<BM25>{
 
 
 	public String toString(){
-		return docID+":"+score;
+		return docID+"\t"+score;
 	}
 }

@@ -64,7 +64,7 @@ public class SearchEngine{
 		for(int x = 0; x < 7; x++)
 		{ // going to have to change the bm25 functino in order to print out to a sepratef ile so the screen isn't flooded with results.
 			String docName = Integer.toString(x) + " query.txt";
-			bm25(query_array[x], invertedIndex, docLengths, docName);
+			bm25(query_array[x], invertedIndex, docLengths, docName, x+1);
 		}
 
 		// Set<String> keys = invertedIndex.keySet();
@@ -170,7 +170,7 @@ public class SearchEngine{
 	*	@param invertedIndex HashMap of inverted index precomputed to use for calculating scores
 	*	@param docLenghts ArrayList of document lenghts - index number corresponds to doc ID.
 	*/
-	public static void bm25(String query, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths, String outputFile){
+	public static void bm25(String query, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths, String outputFile, int queryID){
 		
 		/* Variables for computing BM25 score*/
 		double k1 = 1.2;
@@ -230,13 +230,10 @@ public class SearchEngine{
 
 			//instantiating rankings.size() outside of the scope of the forloop so it's not calling that function 100 times within the loop. boom. knowledge.
 			int rank_size = rankings.size();
-			int limit = rank_size-101;
-			int top_100_count = 1;
+			int limit = rank_size-100;
 			for(int j = rank_size-1; j>=limit; j--)
 			{
-				writer.print(top_100_count + "\t");
-				writer.println(rankings.get(j).toString());
-				top_100_count++;
+				writer.println(queryID + "\t" + "Q0 \t" + rankings.get(j).toString() + "\t" + "hoda_nathan");
 			}
 
 			writer.close();
