@@ -63,7 +63,7 @@ public class SearchEngine{
 
 		for(int x = 0; x < 7; x++)
 		{ // going to have to change the bm25 functino in order to print out to a sepratef ile so the screen isn't flooded with results.
-			String docName = Integer.toString(x) + " query.txt";
+			String docName = Integer.toString(x + 1) + " query.txt";
 			bm25(query_array[x], invertedIndex, docLengths, docName, x+1);
 		}
 
