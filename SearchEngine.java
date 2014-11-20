@@ -7,6 +7,13 @@
 import java.util.*;
 import java.io.*;
 
+
+/** 
+*	Search Engine with BM25 ranking - To use "java SearchEngine <query>" 
+*	Program will print rankings to the terminal so you may opt to send it to a file when
+*	you execute.
+*	Note: You must have tccopus.txt in the same directory as this class
+*/
 public class SearchEngine{
 
 	public static void main(String[] args)throws FileNotFoundException, IOException{
@@ -14,12 +21,15 @@ public class SearchEngine{
 		HashMap<String, ArrayList<TermFrequency>> invertedIndex = new HashMap<String, ArrayList<TermFrequency>>();
 		ArrayList<Integer> docLengths = new ArrayList<Integer>(); // index number the docID and value is the document length
 		
-		buildIndex(args[0], invertedIndex, docLengths);
+		buildIndex("tccorpus.txt", invertedIndex, docLengths); // Build inverted index and get/store doc lenghts
 
+		/* Get user query and store as a single string*/
+		String query = "";
+		for(int i = 0; i<args.length; i++){
+			query = query + " " + args[i];
+		}
 
-
-
-
+		bm25(query, invertedIndex, docLengths);
 
 
 		// Set<String> keys = invertedIndex.keySet();
@@ -102,6 +112,8 @@ public class SearchEngine{
 				}
 			}
 		}
+		
+		docLengths.add(docID, docLength); // add last document and document length to array
 
 		// System.out.println("index has been built");
 
@@ -118,5 +130,68 @@ public class SearchEngine{
 		// 	}
 	}
 
+	/**
+	*	Compute BM25 scores/rankings
+	*	@param query String query to be ranked for
+	*	@param invertedIndex HashMap of inverted index precomputed to use for calculating scores
+	*	@param docLenghts ArrayList of document lenghts - index number corresponds to doc ID.
+	*/
+	public static void bm25(String query, HashMap<String, ArrayList<TermFrequency>> invertedIndex, ArrayList docLengths){
+		
+		/* Variables for computing BM25 score*/
+		double k1 = 1.2;
+		double k2 = 100;
+		double b = 0.75;
+		int dl=1;
+		
+		/* Calculate average document legnth in corpus - used for computing score*/
+		double avdl=0;
+		for(int i = 1; i<docLengths.size(); i++){
+			int length = (Integer)docLengths.get(i);
+			avdl = avdl + length;
+		}
+		avdl = avdl/docLengths.size();
+		/*more variables for computing score*/
+		double bigK = k1*(1-b)+b*(dl/avdl);
+		double n;
+		double bigN = (double) docLengths.size();
+		double qf = 1;
+		double score;
 
+		Scanner scanQuery = new Scanner(query);
+		// int termCount = 0;
+
+		ArrayList<BM25> rankings = new ArrayList<BM25>(); // For storing score objects
+		
+		/* Compute score of each document for each term */
+		while(scanQuery.hasNext()){	
+			// termCount++;
+			String term = scanQuery.next();
+			// invertedLists.put(term, invertedIndex.get(term));
+			ArrayList<TermFrequency> termfrequencies = invertedIndex.get(term);
+			n = termfrequencies.size();
+			for(int i = 0; i<termfrequencies.size(); i++){
+				int docID = termfrequencies.get(i).getDocID();
+				int f = termfrequencies.get(i).getFrequency();
+				dl = (Integer)docLengths.get(docID);
+
+				score = Math.log((1/(n+0.5)))*(((k1+1)*f)/(bigK+f))*(((k2+f)*qf)/(k2+qf));
+				BM25 id = new BM25(docID, 0);
+				if(rankings.contains(id)){
+					int index = rankings.indexOf(id);
+					score = score + rankings.get(index).getScore();
+					rankings.add(index, new BM25(docID, score));
+
+				} else{	
+					rankings.add(new BM25(docID, score));
+				}	
+			}
+		}
+
+		Collections.sort(rankings);
+
+		for(int j = rankings.size()-1; j>=0; j--){
+			System.out.println(rankings.get(j).toString());
+		} 
+	}
 }

@@ -1,3 +1,10 @@
+/**
+*	Faisal Hoda and Paul Nathan
+*	Homework 5
+*	11/21/14
+*/
+
+
 /** Class for creating and managing document id and term frequency pair objects to be stored in inverted index */
 public class TermFrequency{
 	private int docID;
