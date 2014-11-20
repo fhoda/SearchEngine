@@ -229,6 +229,7 @@ public class SearchEngine{
 			PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
 
 			//instantiating rankings.size() outside of the scope of the forloop so it's not calling that function 100 times within the loop. boom. knowledge.
+			// then only printing out the top 100 to a single file, depending on the outputFile name.
 			int rank_size = rankings.size();
 			int limit = rank_size-100;
 			for(int j = rank_size-1; j>=limit; j--)
