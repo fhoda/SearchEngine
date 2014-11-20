@@ -6,6 +6,7 @@
 
 import java.util.*;
 import java.io.*;
+import java.lang.*;
 
 
 /** 
@@ -24,13 +25,44 @@ public class SearchEngine{
 		buildIndex("tccorpus.txt", invertedIndex, docLengths); // Build inverted index and get/store doc lenghts
 
 		/* Get user query and store as a single string*/
-		String query = "";
+		/*String query = "";
 		for(int i = 0; i<args.length; i++){
 			query = query + " " + args[i];
 		}
 
 		bm25(query, invertedIndex, docLengths);
+		*/
+		// removed the above code block in order take in queries from the queries.txt file.
 
+		// get block of queries from queries.txt, place it in an array of size 7.
+
+		String[] query_array = new String[7];
+		FileReader file = new FileReader("queries.txt");
+		BufferedReader reader = new BufferedReader(file);
+
+		Scanner scan;
+
+		int index = 0;
+		while (reader.ready())
+		{
+			// removes the first 
+			String line = reader.readLine();
+			line = line.substring(line.indexOf(" "));
+			query_array[index] = line;
+			index++;
+			if(index >= 7)
+			{
+				// expecting 7 queries for this assignment. If more is provided they will not be accepted.
+				break;
+			}
+		}
+
+		// now we have all of the queries. Let's run it through the bm25 index.
+
+		for(int x = 0; x < 7; x++)
+		{ // going to have to change the bm25 functino in order to print out to a sepratef ile so the screen isn't flooded with results.
+			bm25(query, invertedIndex, docLengths);
+		}
 
 		// Set<String> keys = invertedIndex.keySet();
 		// for(String key : keys){
@@ -44,7 +76,6 @@ public class SearchEngine{
 		// 		System.out.println(i+":"+docLengths.get(i));
 		// 	}
 	}
-
 	/**
 	*	Method to read file and create an inverted index of terms and document length table
 	*	@param fileName String name of file to index
@@ -190,8 +221,9 @@ public class SearchEngine{
 
 		Collections.sort(rankings);
 
-		for(int j = rankings.size()-1; j>=0; j--){
-			System.out.println(rankings.get(j).toString());
-		} 
+		// Don't want to print out all the results. Print it to teh specified
+		//for(int j = rankings.size()-1; j>=0; j--){
+		//	System.out.println(rankings.get(j).toString());
+		//} 
 	}
 }
