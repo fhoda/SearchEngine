@@ -152,7 +152,7 @@ public class SearchEngine{
 		}
 		avdl = avdl/docLengths.size();
 		/*more variables for computing score*/
-		double bigK = k1*(1-b)+b*(dl/avdl);
+		double bigK = k1*((1-b)+b*(dl/avdl));
 		double n;
 		double bigN = (double) docLengths.size();
 		double qf = 1;
@@ -175,7 +175,7 @@ public class SearchEngine{
 				int f = termfrequencies.get(i).getFrequency();
 				dl = (Integer)docLengths.get(docID);
 
-				score = Math.log((1/(n+0.5)))*(((k1+1)*f)/(bigK+f))*(((k2+f)*qf)/(k2+qf));
+				score = Math.log((1/((n+0.5)/(bigN-n+0.5))))*(((k1+1)*f)/(bigK+f))*(((k2+f)*qf)/(k2+qf));
 				BM25 id = new BM25(docID, 0);
 				if(rankings.contains(id)){
 					int index = rankings.indexOf(id);
